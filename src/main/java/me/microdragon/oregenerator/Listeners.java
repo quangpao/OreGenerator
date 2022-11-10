@@ -1,5 +1,6 @@
 package me.microdragon.oregenerator;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -7,71 +8,107 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFromToEvent;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class Listeners implements Listener {
 
-    private OreGenerator _oreGen;
-
-    public Listeners(OreGenerator oreGen) {
-        _oreGen = oreGen;
-        _oreGen.getServer().getPluginManager().registerEvents(this, _oreGen);
-    }
+    private final OreGenerator _oreGen = OreGenerator.getPlugin();
 
     @EventHandler
     public void onFromTo(BlockFromToEvent event) {
-        Material material = event.getBlock().getType();
-        if (material == Material.LAVA || material == Material.WATER) {
-            Block to = event.getToBlock();
-            Material toMaterial = to.getType();
-            if (toMaterial == Material.AIR) {
-                if(generate(material, to)) {
-                    List<String> worlds = _oreGen.getConfig().getStringList("Worlds");
-                    if (worlds.contains(to.getWorld().getName())) {
-                        Random pick = new Random();
-                        int chance = pick.nextInt(100);
-
-                        double coal = _oreGen.getConfig().getDouble("Chance.Coal");
-                        double iron = _oreGen.getConfig().getDouble("Chance.Iron");
-                        double gold = _oreGen.getConfig().getDouble("Chance.Gold");
-                        double redstone = _oreGen.getConfig().getDouble("Chance.Redstone");
-                        double lapis = _oreGen.getConfig().getDouble("Chance.Lapis");
-                        double diamond = _oreGen.getConfig().getDouble("Chance.Diamond");
-                        double emerald = _oreGen.getConfig().getDouble("Chance.Emerald");
-
-                        if (chance > 0 && chance < coal) {
-                            to.setType(Material.COAL_ORE);
-                        } else if (chance > coal && chance < iron) {
-                            to.setType(Material.IRON_ORE);
-                        } else if (chance > iron && chance < gold) {
-                            to.setType(Material.GOLD_ORE);
-                        } else if (chance > gold && chance < redstone) {
-                            to.setType(Material.REDSTONE_ORE);
-                        } else if (chance > redstone && chance < lapis) {
-                            to.setType(Material.LAPIS_ORE);
-                        } else if (chance > lapis && chance < diamond) {
-                            to.setType(Material.DIAMOND_ORE);
-                        } else if (chance > diamond && chance < emerald) {
-                            to.setType(Material.EMERALD_ORE);
-                        }
+        if (event.getBlock().getType() == Material.AIR) {
+            return;
+        }
+        Block source = event.getBlock();
+        Block to = event.getToBlock();
+        if ((source.getType() == Material.WATER
+            || source.getType() == Material.LAVA)) {
+            if((to.getType() == Material.AIR
+                || to.getType() == Material.WATER
+            )
+                && generateCobble(source.getType(), to)
+                && event.getFace() != BlockFace.DOWN) {
+                if(source.getType() == Material.LAVA
+                ) {
+                    if(!isSurroundedByWater(to.getLocation())) {
+                        return;
                     }
                 }
+
+                event.setCancelled(true);
+                to.setType(randomChance());
             }
         }
-
     }
 
     public final BlockFace[] faces = new BlockFace[] { BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.UP, BlockFace.DOWN };
 
-    public boolean generate(Material m, Block b) {
-        Material mirror1 = (m == Material.WATER) ? Material.LAVA : Material.WATER;
-        Material mirror2 = (m == Material.WATER) ? Material.LAVA : Material.WATER;
+    private boolean generateCobble(Material material, Block block) {
+        Material mirMat1 = material == Material.WATER ? Material.LAVA : Material.WATER;
+        Material mirMat2 = material == Material.WATER ? Material.LAVA : Material.WATER;
         for(BlockFace face : faces) {
-            Block relative = b.getRelative(face);
-            if(relative.getType() == mirror1 || relative.getType() == mirror2) {
+            Block relative = block.getRelative(face,1);
+            if(relative.getType() == mirMat1 || relative.getType() == mirMat2) {
                 return true;
             }
+        }
+        return false;
+    }
+
+    private Material randomChance() {
+        Random random = new Random();
+
+        Map<Material, Double> chances = new HashMap<>();
+
+        double coalChance = _oreGen.getConfig().getDouble("Chances.Coal");
+        double ironChance = _oreGen.getConfig().getDouble("Chances.Iron");
+        double goldChance = _oreGen.getConfig().getDouble("Chances.Gold");
+        double redstoneChance = _oreGen.getConfig().getDouble("Chances.Redstone");
+        double lapisChance = _oreGen.getConfig().getDouble("Chances.Lapis");
+        double diamondChance = _oreGen.getConfig().getDouble("Chances.Diamond");
+        double emeraldChance = _oreGen.getConfig().getDouble("Chances.Emerald");
+
+        chances.put(Material.COAL_ORE, coalChance);
+        chances.put(Material.IRON_ORE, ironChance);
+        chances.put(Material.GOLD_ORE, goldChance);
+        chances.put(Material.REDSTONE_ORE, redstoneChance);
+        chances.put(Material.LAPIS_ORE, lapisChance);
+        chances.put(Material.DIAMOND_ORE, diamondChance);
+        chances.put(Material.EMERALD_ORE, emeraldChance);
+
+        double total = 0;
+        for (Map.Entry<Material, Double> entry : chances.entrySet()) {
+            total += entry.getValue();
+        }
+        double randomValue = random.nextDouble() * total;
+        for (Map.Entry<Material, Double> entry : chances.entrySet()) {
+            if (randomValue < entry.getValue()) {
+                return entry.getKey();
+            }
+            randomValue -= entry.getValue();
+        }
+        return Material.COBBLESTONE;
+
+    }
+
+    private boolean isSurroundedByWater(Location loc) {
+        try {
+            Block[] blocks = {
+                    loc.getWorld().getBlockAt(loc.getBlockX() + 1, loc.getBlockY(), loc.getBlockZ()),
+                    loc.getWorld().getBlockAt(loc.getBlockX() - 1, loc.getBlockY(), loc.getBlockZ()),
+                    loc.getWorld().getBlockAt(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ() + 1),
+                    loc.getWorld().getBlockAt(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ() - 1)
+            };
+
+            for(Block block : blocks) {
+                if(block.getType() == Material.WATER) {
+                    return true;
+                }
+            }
+        } catch (NullPointerException exception) {
+            System.out.println("Error: " + exception.getMessage());
         }
         return false;
     }

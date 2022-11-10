@@ -7,18 +7,23 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public final class OreGenerator extends JavaPlugin {
-
+    private static OreGenerator plugin;
     public final Logger logger = Logger.getLogger("Minecraft");
+
+    public static OreGenerator getPlugin() {
+        return plugin;
+    }
 
     @Override
     public void onEnable() {
-        new Listeners(this);
-        getCommand("oregen").setExecutor(new Commands(this));
+        plugin = this;
+        getCommand("oregen").setExecutor(new Commands());
         if(!getDataFolder().exists()) {
             getConfig().options().copyDefaults(true);
             getConfig().set("Worlds", addWorlds());
             saveConfig();
         }
+        getServer().getPluginManager().registerEvents(new Listeners(), this);
 
     }
 

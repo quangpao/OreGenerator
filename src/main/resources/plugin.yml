@@ -4,3 +4,9 @@ main: me.microdragon.oregenerator.OreGenerator
 api-version: 1.19
 authors: [ quangpao ]
 description: A simple minecraft Plug-in to generate Ore randomly.
+commands:
+  oregen:
+    description: Generate Ore randomly.
+    usage: /oregen
+    aliases: [og]
+    default: true
