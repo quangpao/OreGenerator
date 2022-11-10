@@ -1,5 +1,7 @@
 package me.microdragon.oregenerator;
 
+import me.microdragon.oregenerator.utils.BlockUtils;
+import me.microdragon.oregenerator.utils.PluginUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -43,12 +45,10 @@ public class Listeners implements Listener {
         }
     }
 
-    public final BlockFace[] faces = new BlockFace[] { BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.UP, BlockFace.DOWN };
-
     private boolean generateCobble(Material material, Block block) {
         Material mirMat1 = material == Material.WATER ? Material.LAVA : Material.WATER;
         Material mirMat2 = material == Material.WATER ? Material.LAVA : Material.WATER;
-        for(BlockFace face : faces) {
+        for(BlockFace face : BlockUtils.FACES) {
             Block relative = block.getRelative(face,1);
             if(relative.getType() == mirMat1 || relative.getType() == mirMat2) {
                 return true;
@@ -60,23 +60,7 @@ public class Listeners implements Listener {
     private Material randomChance() {
         Random random = new Random();
 
-        Map<Material, Double> chances = new HashMap<>();
-
-        double coalChance = _oreGen.getConfig().getDouble("Chances.Coal");
-        double ironChance = _oreGen.getConfig().getDouble("Chances.Iron");
-        double goldChance = _oreGen.getConfig().getDouble("Chances.Gold");
-        double redstoneChance = _oreGen.getConfig().getDouble("Chances.Redstone");
-        double lapisChance = _oreGen.getConfig().getDouble("Chances.Lapis");
-        double diamondChance = _oreGen.getConfig().getDouble("Chances.Diamond");
-        double emeraldChance = _oreGen.getConfig().getDouble("Chances.Emerald");
-
-        chances.put(Material.COAL_ORE, coalChance);
-        chances.put(Material.IRON_ORE, ironChance);
-        chances.put(Material.GOLD_ORE, goldChance);
-        chances.put(Material.REDSTONE_ORE, redstoneChance);
-        chances.put(Material.LAPIS_ORE, lapisChance);
-        chances.put(Material.DIAMOND_ORE, diamondChance);
-        chances.put(Material.EMERALD_ORE, emeraldChance);
+        Map<Material, Double> chances = PluginUtils.getMaterialChance();
 
         double total = 0;
         for (Map.Entry<Material, Double> entry : chances.entrySet()) {
