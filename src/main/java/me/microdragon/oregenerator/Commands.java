@@ -1,0 +1,35 @@
+package me.microdragon.oregenerator;
+
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+
+public class Commands implements CommandExecutor {
+
+    private OreGenerator _oreGen;
+
+    public Commands(OreGenerator oreGen) {
+        _oreGen = oreGen;
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (label.equalsIgnoreCase("oregen")) {
+            if (args.length == 0) {
+                sender.sendMessage("§6OreGenerator §7- §fVersion 1.0");
+                sender.sendMessage("§6/oregen reload §7- §fReloads the config");
+                return true;
+            } else if (args.length == 1) {
+                if (args[0].equalsIgnoreCase("reload")) {
+                    _oreGen.reloadConfig();
+                    sender.sendMessage("§6OreGenerator §7- §fConfig reloaded");
+                    _oreGen.logger.info("OreGenerator - Config reloaded");
+                    return true;
+                }
+            }
+        }
+
+        return false;
+
+    }
+}

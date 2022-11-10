@@ -1,0 +1,6 @@
+name: OreGenerator
+version: '${project.version}'
+main: me.microdragon.oregenerator.OreGenerator
+api-version: 1.19
+authors: [ quangpao ]
+description: A simple minecraft Plug-in to generate Ore randomly.
