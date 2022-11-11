@@ -1,8 +1,7 @@
-package me.microdragon.oregenerator;
+package me.microdragon.oregenerator.listeners;
 
 import me.microdragon.oregenerator.utils.BlockUtils;
 import me.microdragon.oregenerator.utils.PluginUtils;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -10,13 +9,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFromToEvent;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
 public class Listeners implements Listener {
 
-    private final OreGenerator _oreGen = OreGenerator.getPlugin();
 
     @EventHandler
     public void onFromTo(BlockFromToEvent event) {
@@ -34,7 +31,7 @@ public class Listeners implements Listener {
                 && event.getFace() != BlockFace.DOWN) {
                 if(source.getType() == Material.LAVA
                 ) {
-                    if(!isSurroundedByWater(to.getLocation())) {
+                    if(!BlockUtils.isSurroundedByWater(to.getLocation())) {
                         return;
                     }
                 }
@@ -46,11 +43,10 @@ public class Listeners implements Listener {
     }
 
     private boolean generateCobble(Material material, Block block) {
-        Material mirMat1 = material == Material.WATER ? Material.LAVA : Material.WATER;
-        Material mirMat2 = material == Material.WATER ? Material.LAVA : Material.WATER;
+        Material mirMat = material == Material.WATER ? Material.LAVA : Material.WATER;
         for(BlockFace face : BlockUtils.FACES) {
             Block relative = block.getRelative(face,1);
-            if(relative.getType() == mirMat1 || relative.getType() == mirMat2) {
+            if(relative.getType() == mirMat) {
                 return true;
             }
         }
@@ -77,24 +73,5 @@ public class Listeners implements Listener {
 
     }
 
-    private boolean isSurroundedByWater(Location loc) {
-        try {
-            Block[] blocks = {
-                    loc.getWorld().getBlockAt(loc.getBlockX() + 1, loc.getBlockY(), loc.getBlockZ()),
-                    loc.getWorld().getBlockAt(loc.getBlockX() - 1, loc.getBlockY(), loc.getBlockZ()),
-                    loc.getWorld().getBlockAt(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ() + 1),
-                    loc.getWorld().getBlockAt(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ() - 1)
-            };
-
-            for(Block block : blocks) {
-                if(block.getType() == Material.WATER) {
-                    return true;
-                }
-            }
-        } catch (NullPointerException exception) {
-            System.out.println("Error: " + exception.getMessage());
-        }
-        return false;
-    }
 
 }

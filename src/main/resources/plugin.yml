@@ -10,3 +10,13 @@ commands:
     usage: /oregen
     aliases: [og]
     default: true
+
+permissions:
+  oregen.reload:
+    description: Reload the config file.
+    default: op
+  oregen.*:
+    description: All permissions.
+    default: op
+    children:
+      oregen.reload: true

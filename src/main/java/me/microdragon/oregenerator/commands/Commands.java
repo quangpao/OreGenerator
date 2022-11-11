@@ -1,5 +1,6 @@
-package me.microdragon.oregenerator;
+package me.microdragon.oregenerator.commands;
 
+import me.microdragon.oregenerator.OreGenerator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,7 +13,7 @@ public class Commands implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (label.equalsIgnoreCase("oregen")) {
             if (args.length == 0) {
-                sender.sendMessage("§6OreGenerator §7- §fVersion 2.0");
+                sender.sendMessage("§6OreGenerator §7- §fVersion 2.1");
                 sender.sendMessage("§6/oregen reload §7- §fReloads the config");
                 return true;
             } else if (args.length == 1) {
