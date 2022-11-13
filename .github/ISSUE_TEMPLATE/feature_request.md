@@ -1,20 +1,27 @@
 ---
 name: Feature request
-about: Suggest an idea for this project
-title: "[Features Request]"
-labels: ''
+about: Choose this if you want to request or recommend a new feature to this plugin.
+title: "[F] (Your features name)"
+labels: 'enhancement'
 assignees: quangpao
 
 ---
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+# Feature Request
+### **Your current version:** `(here)`
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+#### _**Is your feature request related to a problem? Please describe.**_
+> (A clear and concise description of what the problem is. Ex. I'm always frustrated when [...])
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
+#### _**Describe the solution you'd like**_
+> (A clear and concise description of what you want to happen.)
 
-**Additional context**
-Add any other context or screenshots about the feature request here.
+#### _**Describe alternatives you've considered**_
+> (A clear and concise description of any alternative solutions or features you've considered.)
+
+#### _**Additional context (Optional)**_
+> (Add any other context or screenshots about the feature request here.)
+
+#### ***Picture (Optional)***
+>  (Upload image here)
+
