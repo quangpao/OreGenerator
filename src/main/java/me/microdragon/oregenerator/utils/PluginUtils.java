@@ -13,10 +13,14 @@ public class PluginUtils {
 
     public static Map<Material, Double> getMaterialChance() {
         Map<Material, Double> materialChance = new HashMap<>();
-        for (String key : Objects.requireNonNull(_oreGen.getConfig().getConfigurationSection("Chances")).getKeys(false)) {
-            materialChance.put(Material.getMaterial(key), _oreGen.getConfig().getDouble("Chances." + key));
+        for (String key : Objects.requireNonNull(_oreGen.getConfig().getConfigurationSection("chances")).getKeys(false)) {
+            materialChance.put(Material.getMaterial(key), _oreGen.getConfig().getDouble("chances." + key));
         }
         return materialChance;
+    }
+
+    public static boolean getDebug() {
+        return _oreGen.getConfig().getBoolean("debug");
     }
 
     public static void loadConfigFolder() {
@@ -34,7 +38,7 @@ public class PluginUtils {
 
     private static void loadConfigFile() {
         _oreGen.getConfig().options().copyDefaults(true);
-        _oreGen.getConfig().set("Worlds", addWorlds());
+        _oreGen.getConfig().set("worlds", addWorlds());
         _oreGen.saveConfig();
     }
 

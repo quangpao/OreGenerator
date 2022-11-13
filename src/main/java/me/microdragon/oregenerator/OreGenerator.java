@@ -2,6 +2,7 @@ package me.microdragon.oregenerator;
 
 import me.microdragon.oregenerator.commands.Commands;
 import me.microdragon.oregenerator.listeners.Listeners;
+import me.microdragon.oregenerator.listeners.ListenersDebug;
 import me.microdragon.oregenerator.utils.PluginUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 import java.util.Objects;
@@ -21,7 +22,11 @@ public final class OreGenerator extends JavaPlugin {
         plugin = this;
         Objects.requireNonNull(getCommand("oregen")).setExecutor(new Commands());
         PluginUtils.loadConfigFolder();
-        getServer().getPluginManager().registerEvents(new Listeners(), this);
+        if (PluginUtils.getDebug()) {
+            getServer().getPluginManager().registerEvents(new ListenersDebug(), this);
+        } else {
+            getServer().getPluginManager().registerEvents(new Listeners(), this);
+        }
 
     }
 

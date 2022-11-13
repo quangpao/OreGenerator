@@ -22,15 +22,11 @@ public class Listeners implements Listener {
         }
         Block source = event.getBlock();
         Block to = event.getToBlock();
-        if ((source.getType() == Material.WATER
-            || source.getType() == Material.LAVA)) {
-            if((to.getType() == Material.AIR
-                || to.getType() == Material.WATER
-            )
-                && generateCobble(source.getType(), to)
+        if ((source.getType() == Material.LAVA)) {
+            if((to.getType() == Material.AIR || to.getType() == Material.WATER)
+                && generateCobble(to)
                 && event.getFace() != BlockFace.DOWN) {
-                if(source.getType() == Material.LAVA
-                ) {
+                if(source.getType() == Material.LAVA) {
                     if(!BlockUtils.isSurroundedByWater(to.getLocation())) {
                         return;
                     }
@@ -42,8 +38,8 @@ public class Listeners implements Listener {
         }
     }
 
-    private boolean generateCobble(Material material, Block block) {
-        Material mirMat = material == Material.WATER ? Material.LAVA : Material.WATER;
+    boolean generateCobble(Block block) {
+        Material mirMat = Material.WATER;
         for(BlockFace face : BlockUtils.FACES) {
             Block relative = block.getRelative(face,1);
             if(relative.getType() == mirMat) {
