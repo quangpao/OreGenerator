@@ -6,7 +6,7 @@
 
     <groupId>me.microdragon</groupId>
     <artifactId>OreGenerator</artifactId>
-    <version>2.2-SNAPSHOT</version>
+    <version>3.0.0-beta</version>
     <packaging>jar</packaging>
 
     <name>OreGenerator</name>
