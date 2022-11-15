@@ -1,4 +1,9 @@
+#This is developer mode, turn it on if you want to see the debug messages (only work when restart the server)
 debug: false
+
+#Chance to generate a custom block
+#Counting by chance / sum (chance of all custom blocks)
+#Ex: STONE = 100 / (100 + 100 + 15 + 25 + 13 + 10 + 4 + 4 + 4) = 0.3636...
 chances:
   STONE: 100
   COBBLESTONE: 100
@@ -9,5 +14,7 @@ chances:
   LAPIS_ORE: 4
   DIAMOND_ORE: 4
   EMERALD_ORE: 4
+
+#Worlds that the plugin will generate custom blocks
 worlds:
   - world
