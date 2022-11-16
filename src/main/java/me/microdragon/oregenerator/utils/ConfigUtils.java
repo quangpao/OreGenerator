@@ -1,5 +1,6 @@
 package me.microdragon.oregenerator.utils;
 
+import com.google.common.base.Charsets;
 import me.microdragon.oregenerator.OreGenerator;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -8,6 +9,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class ConfigUtils {
 
@@ -85,16 +88,18 @@ public class ConfigUtils {
     }
 
     public void reloadConfig() {
-        saveConfig();
         config = YamlConfiguration.loadConfiguration(conFile);
-        Bukkit.getServer().getConsoleSender().sendMessage(ChatUtils.getPrefix() +
-                        ChatColor.of("#A0E4CB") + "Config.yml" +
-                        ChatColor.GREEN + " has been reloaded");
-
         custom = YamlConfiguration.loadConfiguration(customFile);
-        Bukkit.getServer().getConsoleSender().sendMessage(ChatUtils.getPrefix() +
-                        ChatColor.of("#A0E4CB") + "Custom.yml" +
-                        ChatColor.GREEN + " has been reloaded");
+
+        final InputStream defConfigStream = _oreGen.getResource("config.yml");
+        final InputStream defCustomStream = _oreGen.getResource("custom.yml");
+
+        if (defConfigStream == null || defCustomStream == null) {
+            return;
+        }
+
+        config.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream, Charsets.UTF_8)));
+        custom.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(defCustomStream, Charsets.UTF_8)));
     }
 
 
