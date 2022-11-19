@@ -16,11 +16,11 @@ public class ConfigUtils {
 
     private static final OreGenerator _oreGen = OreGenerator.getPlugin();
 
-    public FileConfiguration config;
-    public File conFile;
+    private FileConfiguration config;
+    private File conFile;
 
-    public FileConfiguration custom;
-    public File customFile;
+    private FileConfiguration custom;
+    private File customFile;
 
     public void setup() {
         if (!_oreGen.getDataFolder().exists()) {
@@ -88,6 +88,15 @@ public class ConfigUtils {
     }
 
     public void reloadConfig() {
+
+        if (conFile == null) {
+            conFile = new File(_oreGen.getDataFolder(), "config.yml");
+        }
+
+        if (customFile == null) {
+            customFile = new File(_oreGen.getDataFolder(), "custom.yml");
+        }
+
         config = YamlConfiguration.loadConfiguration(conFile);
         custom = YamlConfiguration.loadConfiguration(customFile);
 

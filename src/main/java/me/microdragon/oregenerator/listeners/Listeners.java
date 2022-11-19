@@ -1,8 +1,8 @@
 package me.microdragon.oregenerator.listeners;
 
+import me.microdragon.oregenerator.OreGenerator;
 import me.microdragon.oregenerator.objects.CustomGen;
 import me.microdragon.oregenerator.utils.BlockUtils;
-import me.microdragon.oregenerator.utils.PluginUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -17,7 +17,6 @@ import java.util.Random;
 
 public class Listeners implements Listener {
 
-    private static final Map<String, CustomGen> customGens = PluginUtils.getCustomGens();
     private CustomGen resultOre;
     @EventHandler
     public void onFromTo(BlockFromToEvent event) {
@@ -55,6 +54,7 @@ public class Listeners implements Listener {
 
     @EventHandler
     public void blockBreak(BlockBreakEvent event) {
+        Map<String, CustomGen> customGens = OreGenerator.getCustomGens();
         Player player = event.getPlayer();
         String resultOre = null;
         for (Map.Entry<String, CustomGen> entry : customGens.entrySet()) {
@@ -62,14 +62,15 @@ public class Listeners implements Listener {
             if (customGen.getPermission() != null) {
                 if (player.hasPermission(customGen.getPermission())) {
                     if (customGen.isEnabled()) {
+                        int prio = entry.getValue().getPriority();
                         if (customGen.getWorlds().length > 0) {
                             for (int i = 0; i < customGen.getWorlds().length; i++) {
                                 if (customGen.getWorlds()[i].equals(event.getBlock().getWorld())) {
-                                    resultOre = getPriority(resultOre, entry, customGen);
+                                    resultOre = getPriority(resultOre, prio, entry, customGen);
                                 }
                             }
                         } else {
-                            resultOre = getPriority(resultOre, entry, customGen);
+                            resultOre = getPriority(resultOre, prio, entry, customGen);
                         }
                     }
                 }
@@ -78,12 +79,12 @@ public class Listeners implements Listener {
         this.resultOre = customGens.get(resultOre);
     }
 
-    private String getPriority(String resultOre, Map.Entry<String, CustomGen> entry, CustomGen customGen) {
+    private String getPriority(String resultOre, int priority, Map.Entry<String, CustomGen> entry, CustomGen customGen) {
         if(customGen.getPriority() > 0) {
             if(resultOre == null) {
                 resultOre = entry.getKey();
             } else {
-                if(customGens.get(resultOre).getPriority() < customGen.getPriority()) {
+                if(priority < customGen.getPriority()) {
                     resultOre = entry.getKey();
                 }
             }
