@@ -29,7 +29,6 @@ public class Listeners implements Listener {
             return;
         }
 
-        System.out.println("Result Ore: " + resultOre);
         if (resultOre == null) {
             return;
         }
@@ -38,14 +37,9 @@ public class Listeners implements Listener {
         Block to = event.getToBlock();
 
 
-        if ((source.getType() == Material.LAVA)) {
+        if ((source.getType() == resultOre.getSource())) {
             if((to.getType() == Material.AIR)
-                && generateCobble(to)
                 && event.getFace() != BlockFace.DOWN) {
-//                    if(!BlockUtils.isSurroundedByWater(to.getLocation())) {
-//                        return;
-//                }
-
                 event.setCancelled(true);
                 to.setType(randomChance());
             }
@@ -59,50 +53,53 @@ public class Listeners implements Listener {
         String resultOre = null;
         for (Map.Entry<String, CustomGen> entry : customGens.entrySet()) {
             CustomGen customGen = entry.getValue();
-            if (customGen.getPermission() != null) {
-                if (player.hasPermission(customGen.getPermission())) {
-                    if (customGen.isEnabled()) {
-                        int prio = entry.getValue().getPriority();
-                        if (customGen.getWorlds().length > 0) {
-                            for (int i = 0; i < customGen.getWorlds().length; i++) {
-                                if (customGen.getWorlds()[i].equals(event.getBlock().getWorld())) {
-                                    resultOre = getPriority(resultOre, prio, entry, customGen);
-                                }
-                            }
-                        } else {
-                            resultOre = getPriority(resultOre, prio, entry, customGen);
+            if(generateCobble(event.getBlock(), customGen.getSource(), customGen.getTarget())) {
+
+                if (!customGen.isEnabled()) {
+                    continue;
+                }
+
+                //Check if player has permission to use this generator
+                if (customGen.getPermission() != null) {
+                    if (!player.hasPermission(customGen.getPermission())) {
+                        continue;
+                    }
+                }
+
+                if (customGen.getWorlds().size() > 0) {
+                    if (!customGen.getWorlds().contains(player.getWorld())) {
+                        continue;
+                    }
+                }
+
+                if (customGen.getPriority() > 0) {
+                    if (resultOre == null) {
+                        resultOre = entry.getKey();
+                    } else {
+                        if (customGens.get(resultOre).getPriority() < customGen.getPriority()) {
+                            resultOre = entry.getKey();
                         }
                     }
                 }
+
             }
         }
         this.resultOre = customGens.get(resultOre);
     }
 
-    private String getPriority(String resultOre, int priority, Map.Entry<String, CustomGen> entry, CustomGen customGen) {
-        if(customGen.getPriority() > 0) {
-            if(resultOre == null) {
-                resultOre = entry.getKey();
-            } else {
-                if(priority < customGen.getPriority()) {
-                    resultOre = entry.getKey();
-                }
-            }
-        } else {
-            resultOre = entry.getKey();
-        }
-        return resultOre;
-    }
-
-    boolean generateCobble(Block block) {
-        Material mirMat = resultOre.getWith();
+    boolean generateCobble(Block block, Material source, Material target) {
+        boolean mirMat = false;
+        boolean mirMat2 = false;
         for(BlockFace face : BlockUtils.FACES) {
             Block relative = block.getRelative(face,1);
-            if(relative.getType() == mirMat) {
-                return true;
+            if(relative.getType() == source) {
+                mirMat = true;
+            }
+            if(relative.getType() == target) {
+                mirMat2 = true;
             }
         }
-        return false;
+        return mirMat && mirMat2;
     }
 
     private Material randomChance() {

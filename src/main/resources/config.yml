@@ -1,3 +1,3 @@
 #This is developer mode, turn it on if you want to see the debug messages (only work when restart the server)
-debug: false
+debug: false # this won't work anymore, just let it be false
 

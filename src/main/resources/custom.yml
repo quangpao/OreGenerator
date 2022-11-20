@@ -1,14 +1,21 @@
 NormalGen:
-  enabled: true
-  name: '&6NormalGen'
-  permission: 'custom.normalgen'
-  priority: 1
-  worlds:
-#    - world
-#  Mean (Lava - Water) will generate this Normal Gen
-#  WARN: the 'with' value can't be LAVA, or it won't work
-  with: WATER
-  chances:
+  enabled: true # Enable/Disable the generator
+  name: '&6NormalGen' # Name of the generator
+  permission: 'custom.normalgen' # Permission to use the generator
+  priority: 1 # Priority of the generator
+  worlds: # Worlds where the generator is enabled
+#    - 'world'
+#    - 'world_nether'
+#    - 'world_the_end'
+
+  custom:
+    enabled: true # false to disable custom generator block
+    source: LAVA # mean the proactive (movable) block like lava, water
+    target: OAK_FENCE # mean the reactive (static) block like stone, dirt
+
+  # Chance count by chance / sum of all chance in the list
+  # Example: 100/275 chance to get stone
+  chances: # Chances of the generator
     STONE: 100
     COBBLESTONE: 100
     COAL_ORE: 15

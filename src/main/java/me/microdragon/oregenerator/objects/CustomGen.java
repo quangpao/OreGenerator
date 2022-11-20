@@ -3,7 +3,7 @@ package me.microdragon.oregenerator.objects;
 import org.bukkit.Material;
 import org.bukkit.World;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class CustomGen {
@@ -11,18 +11,37 @@ public class CustomGen {
     private final boolean enabled;
     private final String name;
     private final String permission;
-    private final World[] worlds;
+    private final ArrayList<World> worlds;
     private final int priority;
-    private final Material with;
+    private Material source = Material.LAVA;
+    private Material target = Material.WATER;
     private final HashMap<Material, Double> materialChance;
 
-    public CustomGen(boolean enabled, String name, String permission, World[] worlds, int priority, Material with, HashMap<Material, Double> materialChance) {
+    /**
+     * This is the constructor for the CustomGen class.
+     * Des: Using when the custom generator is disabled.
+     */
+    public CustomGen(boolean enabled, String name, String permission, ArrayList<World> worlds, int priority, HashMap<Material, Double> materialChance) {
         this.enabled = enabled;
         this.name = name;
         this.permission = permission;
         this.worlds = worlds;
         this.priority = priority;
-        this.with = with;
+        this.materialChance = materialChance;
+    }
+
+    /**
+     * This is the constructor for the CustomGen class.
+     * Des: Using when the custom generator is enabled and all source and target had been used.
+     */
+    public CustomGen(boolean enabled, String name, String permission, ArrayList<World> worlds, int priority, Material source, Material target, HashMap<Material, Double> materialChance) {
+        this.enabled = enabled;
+        this.name = name;
+        this.permission = permission;
+        this.worlds = worlds;
+        this.priority = priority;
+        this.source = source;
+        this.target = target;
         this.materialChance = materialChance;
     }
 
@@ -30,24 +49,16 @@ public class CustomGen {
         return enabled;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public String getPermission() {
         return permission;
     }
 
-    public World[] getWorlds() {
+    public ArrayList<World> getWorlds() {
         return worlds;
     }
 
     public int getPriority() {
         return priority;
-    }
-
-    public Material getWith() {
-        return with;
     }
 
     public HashMap<Material, Double> getMaterialChance() {
@@ -60,10 +71,20 @@ public class CustomGen {
                 "enabled=" + enabled +
                 ", name='" + name + '\'' +
                 ", permission='" + permission + '\'' +
-                ", worlds=" + Arrays.toString(worlds) +
+                ", worlds=" + worlds +
                 ", priority=" + priority +
-                ", with=" + with +
+                ", source=" + source +
+                ", target=" + target +
                 ", materialChance=" + materialChance +
                 '}';
     }
+
+    public Material getTarget() {
+        return target;
+    }
+
+    public Material getSource() {
+        return source;
+    }
+
 }

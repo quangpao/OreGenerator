@@ -24,7 +24,7 @@ public class ListenersDebug extends Listeners implements Listener {
         System.out.println("--------- generateCobble() ---------");
         System.out.println("Material: " + event.getBlock().getType());
         System.out.println("Block: " + event.getToBlock());
-        System.out.println("Result: " + super.generateCobble(event.getToBlock()));
+//        System.out.println("Result: " + super.generateCobble(event.getToBlock()));
         System.out.println("--------- generateCobble() ---------");
         System.out.println();
         System.out.println();
