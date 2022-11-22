@@ -5,8 +5,7 @@ import me.microdragon.oregenerator.objects.CustomGen;
 import me.microdragon.oregenerator.utils.BlockUtils;
 import me.microdragon.oregenerator.utils.ChatUtils;
 import me.microdragon.oregenerator.utils.ConfigUtils;
-import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -27,7 +26,7 @@ public class Commands implements CommandExecutor {
                     _configUtils.reloadConfig();
                     OreGenerator.setConfigUtils(_configUtils);
                     OreGenerator.setCustomGens();
-                    sender.sendMessage(ChatUtils.getPrefix() + ChatColor.of("#A0E4CB") + "Config reloaded");
+                    sender.sendMessage(ChatUtils.getPrefix() + ChatColor.GREEN + "Config reloaded");
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("debug")) {

@@ -13,6 +13,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 
 public class Listeners implements Listener {
@@ -28,18 +29,19 @@ public class Listeners implements Listener {
         if (event.getToBlock().getType() != Material.AIR) {
             return;
         }
-
+//        System.out.println(resultOre);
         if (resultOre == null) {
             return;
         }
-
         Block source = event.getBlock();
         Block to = event.getToBlock();
-
-
-        if ((source.getType() == resultOre.getSource())) {
+//        System.out.println(source.getType());
+//        System.out.println(to.getType());
+        if ((Objects.equals(getType(source.getType().name()), getType(resultOre.getSource().name())))) {
             if((to.getType() == Material.AIR)
+
                 && event.getFace() != BlockFace.DOWN) {
+                System.out.println("Can it come here?");
                 event.setCancelled(true);
                 to.setType(randomChance());
             }
@@ -53,25 +55,21 @@ public class Listeners implements Listener {
         String resultOre = null;
         for (Map.Entry<String, CustomGen> entry : customGens.entrySet()) {
             CustomGen customGen = entry.getValue();
-            if(generateCobble(event.getBlock(), customGen.getSource(), customGen.getTarget())) {
-
+//            System.out.println(customGen);
+            if(generateCobble(event.getBlock(), customGen.getSource().name(), customGen.getTarget().name())) {
                 if (!customGen.isEnabled()) {
                     continue;
                 }
-
-                //Check if player has permission to use this generator
                 if (customGen.getPermission() != null) {
                     if (!player.hasPermission(customGen.getPermission())) {
                         continue;
                     }
                 }
-
                 if (customGen.getWorlds().size() > 0) {
                     if (!customGen.getWorlds().contains(player.getWorld())) {
                         continue;
                     }
                 }
-
                 if (customGen.getPriority() > 0) {
                     if (resultOre == null) {
                         resultOre = entry.getKey();
@@ -84,21 +82,29 @@ public class Listeners implements Listener {
 
             }
         }
+//        System.out.println(resultOre);
         this.resultOre = customGens.get(resultOre);
     }
-
-    boolean generateCobble(Block block, Material source, Material target) {
+    boolean generateCobble(Block block, String source, String target) {
         boolean mirMat = false;
         boolean mirMat2 = false;
+
+        String sourceMat = getType(source);
+        String targetMat = getType(target);
+//        System.out.println("Source: " + sourceMat);
+//        System.out.println("Target: " + targetMat);
         for(BlockFace face : BlockUtils.FACES) {
             Block relative = block.getRelative(face,1);
-            if(relative.getType() == source) {
+//            System.out.println("Relative: " + relative.getType());
+            if(Objects.equals(getType(relative.getType().name()), sourceMat)) {
                 mirMat = true;
             }
-            if(relative.getType() == target) {
+            if(Objects.equals(getType(relative.getType().name()), targetMat)) {
                 mirMat2 = true;
             }
         }
+//        System.out.println("mirMat: " + mirMat);
+//        System.out.println("mirMat2: " + mirMat2);
         return mirMat && mirMat2;
     }
 
@@ -122,5 +128,14 @@ public class Listeners implements Listener {
 
     }
 
+
+    private String getType(String materialName) {
+        if (materialName.equals("LAVA") || materialName.equals("STATIONARY_LAVA")) {
+            return "LAVA";
+        } else if (materialName.equals("WATER") || materialName.equals("STATIONARY_WATER")) {
+            return "WATER";
+        }
+        return materialName;
+    }
 
 }

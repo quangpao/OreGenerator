@@ -2,8 +2,8 @@ package me.microdragon.oregenerator.utils;
 
 import com.google.common.base.Charsets;
 import me.microdragon.oregenerator.OreGenerator;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -30,8 +30,7 @@ public class ConfigUtils {
         if (!conFile.exists()) {
                 _oreGen.saveResource("config.yml", false);
                 Bukkit.getServer().getConsoleSender().sendMessage(ChatUtils.getPrefix() +
-                        ChatColor.of("#A0E4CB") + "Config.yml" +
-                        ChatColor.GREEN + " created");
+                        ChatColor.GREEN + "Config.yml created");
 
         }
         config = YamlConfiguration.loadConfiguration(conFile);
@@ -47,8 +46,7 @@ public class ConfigUtils {
         if (!customFile.exists()) {
             _oreGen.saveResource("custom.yml", false);
             Bukkit.getServer().getConsoleSender().sendMessage(ChatUtils.getPrefix() +
-                            ChatColor.of("#A0E4CB") + "Custom.yml" +
-                            ChatColor.GREEN + " created");
+                            ChatColor.GREEN + "Custom.yml created");
 
         }
 
@@ -67,23 +65,19 @@ public class ConfigUtils {
         try {
             config.save(conFile);
             Bukkit.getServer().getConsoleSender().sendMessage(ChatUtils.getPrefix() +
-                            ChatColor.of("#A0E4CB") + "Config.yml" +
-                            ChatColor.GREEN + " has been saved");
+                            ChatColor.GREEN + "Config.yml has been saved");
         } catch (IOException ex) {
             Bukkit.getServer().getConsoleSender().sendMessage(ChatUtils.getPrefix() +
-                            ChatColor.of("#A0E4CB") + "Config.yml" +
-                            ChatColor.RED + " could not be saved");
+                            ChatColor.RED + "Config.yml could not be saved");
         }
 
         try {
             custom.save(customFile);
             Bukkit.getServer().getConsoleSender().sendMessage(ChatUtils.getPrefix() +
-                            ChatColor.of("#A0E4CB") + "Custom.yml" +
-                            ChatColor.GREEN + " has been saved");
+                            ChatColor.GREEN + "Custom.yml has been saved");
         } catch (IOException ex) {
             Bukkit.getServer().getConsoleSender().sendMessage(ChatUtils.getPrefix() +
-                            ChatColor.of("#A0E4CB") + "Custom.yml" +
-                            ChatColor.RED + " could not be saved");
+                            ChatColor.RED + "Custom.yml could not be saved");
         }
     }
 
