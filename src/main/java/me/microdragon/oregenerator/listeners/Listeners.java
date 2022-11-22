@@ -39,7 +39,7 @@ public class Listeners implements Listener {
 //        System.out.println(to.getType());
         if ((Objects.equals(getType(source.getType().name()), getType(resultOre.getSource().name())))) {
             if((to.getType() == Material.AIR)
-
+                && generateCobble(to, source.getType().name(),resultOre.getTarget().name())
                 && event.getFace() != BlockFace.DOWN) {
                 System.out.println("Can it come here?");
                 event.setCancelled(true);
